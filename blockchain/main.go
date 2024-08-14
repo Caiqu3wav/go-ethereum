@@ -29,3 +29,23 @@ import (
 		blockHash := sha256.Sum256([]byte(blockData))
 		return fmt.Sprintf("%x", blockHash) 
 	}
+
+	func (b *Block) mine(difficulty int) {
+		for !strings.HasPrefix(b.hash, strings.Repeat("0", difficulty)) {
+			b.pow++
+			b.hash = b.calculeHash()
+		}
+	}
+
+	func CreateBlockchain(difficulty int) Blockchain {
+		genesisBlock := Block {
+			hash: "0",
+			timestamp: time.Now(),
+		}
+		return Blockchain{
+			genesisBlock,
+			[]Block{genesisBlock},
+			difficulty,
+		}
+	}
+
