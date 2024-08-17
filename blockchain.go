@@ -27,7 +27,7 @@ import (
 		data, _ := json.Marshal(b.data)
 		blockData := b.previousHash + string(data) + b.timestamp.String() + strconv.Itoa(b.pow)
 		blockHash := sha256.Sum256([]byte(blockData))
-		return fmt.Sprintf("%x", blockHash) 
+		return fmt.Sprintf("%x", blockHash)
 	}
 
 	func (b *Block) mine(difficulty int) {
@@ -48,4 +48,31 @@ import (
 			difficulty,
 		}
 	}
+
+func (b *Blockchain) addBlock(from, to string, amount float64) {
+	blockData := map[string]interface{}{
+		"from": from,
+		"to": to,
+		"amount": amount,
+	}
+	lastBlock := b.chain[len(b.chain)-1]
+	newBlock := Block{
+		data:     blockData,
+		previousHash: lastBlock.hash,
+		timestamp:   time.Now(),
+	}
+	newBlock.mine(b.difficulty)
+	b.chain = append(b.chain, newBlock)
+}
+
+func (b Blockchain) isValid() bool {
+	for i := range b.chain[1:] {
+		previousBlock := b.chain[i]
+		currentBlock := b.chain[i+1]
+		if currentBlock.hash != currentBlock.calculeHash() || currentBlock.previousHash != previousBlock.hash {
+			return false
+		}
+	}
+	return true
+}
 
