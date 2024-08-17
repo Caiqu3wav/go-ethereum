@@ -76,3 +76,12 @@ func (b Blockchain) isValid() bool {
 	return true
 }
 
+func main() {
+	// cria nova instância de blockchain com a dificuldade da mineração 2
+	blockchain := CreateBlockchain(2)
+
+	blockchain.addBlock("Caique", "Aline", 5)
+	blockchain.addBlock("João", "Gaby", 2)
+
+	fmt.Println(blockchain.isValid())
+}
